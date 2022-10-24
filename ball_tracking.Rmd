@@ -1,0 +1,304 @@
+---
+title: "ball_tracking"
+author: "Henry Guerrero-Duarte"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Libraries used
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+## Reading CSV file
+```{r}
+mydata1=read.csv("pitch_data_questionnaire.csv")
+str(mydata1)
+#View(mydata1)
+#summary(mydata1)
+```
+
+
+
+## player_a
+```{r}
+#select rows where player_a appears in any column
+#df_a = mydata1 %>% filter_all(any_vars(. %in% c("player_a")))
+
+#Pitches dataframes for player_b
+#changeup_a = df_a %>% filter_all(any_vars(. %in% c("changeup")))
+#curveball_a = df_a %>% filter_all(any_vars(. %in% c("curveball")))
+#cutter_a = df_a %>% filter_all(any_vars(. %in% c("cutter")))
+#four_seam_a = df_a %>% filter_all(any_vars(. %in% c("four_seam")))
+#sinker_a = df_a %>% filter_all(any_vars(. %in% c("sinker")))
+#slider_a = df_a %>% filter_all(any_vars(. %in% c("slider")))
+
+#Finding out Unique names for Venues
+#unique(df_a$venue)
+
+#Venue dataframes For Player_a
+#PrinceGeorge_a = df_a %>% filter_all(any_vars(. %in% c("PrinceGeorge")))
+#The_Diamond_a = df_a %>% filter_all(any_vars(. %in% c("The Diamond")))
+#CanalPark_a = df_a %>% filter_all(any_vars(. %in% c("CanalPark")))
+#UPMC_Park_a = df_a %>% filter_all(any_vars(. %in% c("UPMC Park")))
+#HadlockField_a = df_a %>% filter_all(any_vars(. %in% c("HadlockField")))
+#NaturalGasField_a = df_a %>% filter_all(any_vars(. %in% c("NaturalGasField")))
+#FNBField_a = df_a %>% filter_all(any_vars(. %in% c("FNBField")))
+#Delta_Dental_Stadium_a = df_a %>% filter_all(any_vars(. %in% c("Delta Dental Stadium")))
+
+#Finding out Unique names for Venues
+#unique(CanalPark_a$pitch_call)
+
+#Count the Number of Occurrences 
+#table(CanalPark_a['pitch_call'])
+#table(CanalPark_a['play_result'])
+
+CanalPark_a$fieldperf <- paste(CanalPark_a$pitch_call,CanalPark_a$play_result)
+summary(CanalPark_a$fieldperf)
+
+
+
+
+```
+
+
+
+## player_b
+```{r}
+#select rows where player_b appears in any column
+df_b = mydata1 %>% filter_all(any_vars(. %in% c("player_b")))
+
+#Pitches dataframes for player_b
+#changeup_b = df_b %>% filter_all(any_vars(. %in% c("changeup")))
+#curveball_b = df_b %>% filter_all(any_vars(. %in% c("curveball")))
+#slider_b = df_b %>% filter_all(any_vars(. %in% c("slider")))
+#four_seam_b = df_b %>% filter_all(any_vars(. %in% c("four_seam")))
+
+#Finding out Unique names for Venues
+unique(df_b$venue)
+
+#Venue dataframes For Player_b
+Cheney_Stadium_b = df_b %>% filter_all(any_vars(. %in% c("Cheney Stadium")))
+Las_Vegas_Ballpark_b = df_b %>% filter_all(any_vars(. %in% c("Las Vegas Ballpark")))
+Sutter_Health_Park_b = df_b %>% filter_all(any_vars(. %in% c("Sutter Health Park")))
+Greater_Nevada_Field_b = df_b %>% filter_all(any_vars(. %in% c("Greater Nevada Field")))
+Smiths_Ballpark_b = df_b %>% filter_all(any_vars(. %in% c("Smith's Ballpark")))
+Southwest_University_Park_b = df_b %>% filter_all(any_vars(. %in% c("Southwest University Park")))
+Dell_Diamond_b = df_b %>% filter_all(any_vars(. %in% c("Dell Diamond")))
+Isotopes_Park_b = df_b %>% filter_all(any_vars(. %in% c("Isotopes Park")))
+Chickasaw_Bricktown_Ballpark_b = df_b %>% filter_all(any_vars(. %in% c("Chickasaw Bricktown Ballpark")))
+
+```
+
+
+
+## Creating Coordniates for batters box
+```{r}
+x <- c(-.95,.95,.95,-.95,-.95)
+z <- c(1.6,1.6,3.5,3.5,1.6)
+
+#store in data frame
+sz <- tibble(x,z) 
+```
+
+
+###################################   Player A Heat maps ###############################################
+
+
+## player_a Pitches( changeup, curveball, cutter, four_seam, sinker, slider) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = df_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( changeup) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = changeup_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( curveball) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = curveball_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( cutter) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = cutter_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( four_seam) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = four_seam_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( sinker) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = sinker_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( slider) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = slider_a,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+
+###################################   Player B Heat maps ################################################
+
+## player_b Pitches( changeup, curveball, four_seam, slider) Heat Map   
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = df_b,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( changeup) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = changeup_b,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( curveball) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = curveball_b,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( four_seam) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = four_seam_b,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+## player_a Pitches( slider) Heat map
+```{r}
+ggplot()+
+  geom_path(data = sz, aes(x=x, y=z))+
+  coord_equal()+
+  xlab("feet from home plate")+
+  ylab("feet above the ground")+
+  geom_point(data = slider_b,aes(x=plate_loc_side,y=plate_loc_height,size=rel_speed,color=pitch_type))+
+  scale_size(range = c(0.01,3))
+```
+
+###################################   Player A Performance at each Venue ################################
+
+
+
+```{r}
+# Get the library.
+library(plotrix)
+
+# Create data for the graph.
+
+lbl <- c("ball_called", "foul_ball", "hit_by_pitch", "in_play","strike_called","strike_swinging")
+
+# Give the chart file a name.
+png(file = "player_a_pie_chart.jpg")
+
+# Plot the chart.
+pie3D(pitch_call_a,labels = lbl,explode = 0.1, main = "player_a_pie_chart ")
+
+# Save the file.
+dev.off()
+
+```
+
+
+
+###################################   Player B Performance at each Venue ################################
+
+```{r}
+
+# Get the library.
+library(plotrix)
+
+# Create data for the graph.
+
+lbl <- c("ball_called", "foul_ball", "hit_by_pitch", "in_play","strike_called","strike_swinging")
+
+# Give the chart file a name.
+png(file = "player_b_pie_chart.jpg")
+
+# Plot the chart.
+pie3D(pitch_call_b,labels = lbl,explode = 0.1, main = "player_a_pie_chart ")
+
+# Save the file.
+dev.off()
+
+
+```
+
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
