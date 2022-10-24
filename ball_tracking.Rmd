@@ -2,7 +2,9 @@
 title: "ball_tracking"
 author: "Henry Guerrero-Duarte"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -32,40 +34,30 @@ str(mydata1)
 ## player_a
 ```{r}
 #select rows where player_a appears in any column
-#df_a = mydata1 %>% filter_all(any_vars(. %in% c("player_a")))
+df_a = mydata1 %>% filter_all(any_vars(. %in% c("player_a")))
 
 #Pitches dataframes for player_b
-#changeup_a = df_a %>% filter_all(any_vars(. %in% c("changeup")))
-#curveball_a = df_a %>% filter_all(any_vars(. %in% c("curveball")))
-#cutter_a = df_a %>% filter_all(any_vars(. %in% c("cutter")))
-#four_seam_a = df_a %>% filter_all(any_vars(. %in% c("four_seam")))
-#sinker_a = df_a %>% filter_all(any_vars(. %in% c("sinker")))
-#slider_a = df_a %>% filter_all(any_vars(. %in% c("slider")))
+changeup_a = df_a %>% filter_all(any_vars(. %in% c("changeup")))
+curveball_a = df_a %>% filter_all(any_vars(. %in% c("curveball")))
+cutter_a = df_a %>% filter_all(any_vars(. %in% c("cutter")))
+four_seam_a = df_a %>% filter_all(any_vars(. %in% c("four_seam")))
+sinker_a = df_a %>% filter_all(any_vars(. %in% c("sinker")))
+slider_a = df_a %>% filter_all(any_vars(. %in% c("slider")))
 
 #Finding out Unique names for Venues
-#unique(df_a$venue)
+unique(df_a$venue)
 
 #Venue dataframes For Player_a
-#PrinceGeorge_a = df_a %>% filter_all(any_vars(. %in% c("PrinceGeorge")))
-#The_Diamond_a = df_a %>% filter_all(any_vars(. %in% c("The Diamond")))
-#CanalPark_a = df_a %>% filter_all(any_vars(. %in% c("CanalPark")))
-#UPMC_Park_a = df_a %>% filter_all(any_vars(. %in% c("UPMC Park")))
-#HadlockField_a = df_a %>% filter_all(any_vars(. %in% c("HadlockField")))
-#NaturalGasField_a = df_a %>% filter_all(any_vars(. %in% c("NaturalGasField")))
-#FNBField_a = df_a %>% filter_all(any_vars(. %in% c("FNBField")))
-#Delta_Dental_Stadium_a = df_a %>% filter_all(any_vars(. %in% c("Delta Dental Stadium")))
+PrinceGeorge_a = df_a %>% filter_all(any_vars(. %in% c("PrinceGeorge")))
+The_Diamond_a = df_a %>% filter_all(any_vars(. %in% c("The Diamond")))
+CanalPark_a = df_a %>% filter_all(any_vars(. %in% c("CanalPark")))
+UPMC_Park_a = df_a %>% filter_all(any_vars(. %in% c("UPMC Park")))
+HadlockField_a = df_a %>% filter_all(any_vars(. %in% c("HadlockField")))
+NaturalGasField_a = df_a %>% filter_all(any_vars(. %in% c("NaturalGasField")))
+FNBField_a = df_a %>% filter_all(any_vars(. %in% c("FNBField")))
+Delta_Dental_Stadium_a = df_a %>% filter_all(any_vars(. %in% c("Delta Dental Stadium")))
 
-#Finding out Unique names for Venues
-#unique(CanalPark_a$pitch_call)
-
-#Count the Number of Occurrences 
-#table(CanalPark_a['pitch_call'])
-#table(CanalPark_a['play_result'])
-
-CanalPark_a$fieldperf <- paste(CanalPark_a$pitch_call,CanalPark_a$play_result)
-summary(CanalPark_a$fieldperf)
-
-
+pitch_call_a = table(df_a['pitch_call'])
 
 
 ```
@@ -78,10 +70,10 @@ summary(CanalPark_a$fieldperf)
 df_b = mydata1 %>% filter_all(any_vars(. %in% c("player_b")))
 
 #Pitches dataframes for player_b
-#changeup_b = df_b %>% filter_all(any_vars(. %in% c("changeup")))
-#curveball_b = df_b %>% filter_all(any_vars(. %in% c("curveball")))
-#slider_b = df_b %>% filter_all(any_vars(. %in% c("slider")))
-#four_seam_b = df_b %>% filter_all(any_vars(. %in% c("four_seam")))
+changeup_b = df_b %>% filter_all(any_vars(. %in% c("changeup")))
+curveball_b = df_b %>% filter_all(any_vars(. %in% c("curveball")))
+slider_b = df_b %>% filter_all(any_vars(. %in% c("slider")))
+four_seam_b = df_b %>% filter_all(any_vars(. %in% c("four_seam")))
 
 #Finding out Unique names for Venues
 unique(df_b$venue)
@@ -97,8 +89,11 @@ Dell_Diamond_b = df_b %>% filter_all(any_vars(. %in% c("Dell Diamond")))
 Isotopes_Park_b = df_b %>% filter_all(any_vars(. %in% c("Isotopes Park")))
 Chickasaw_Bricktown_Ballpark_b = df_b %>% filter_all(any_vars(. %in% c("Chickasaw Bricktown Ballpark")))
 
-```
 
+#data frame for pitch_call_b
+pitch_call_b = table(df_b['pitch_call'])
+
+```
 
 
 ## Creating Coordniates for batters box
@@ -249,23 +244,25 @@ ggplot()+
   scale_size(range = c(0.01,3))
 ```
 
-###################################   Player A Performance at each Venue ################################
-
-
+### Player A Performance
 
 ```{r}
-# Get the library.
-library(plotrix)
+# Create data for the labels and Pie Chart
 
-# Create data for the graph.
 
-lbl <- c("ball_called", "foul_ball", "hit_by_pitch", "in_play","strike_called","strike_swinging")
+lbl <- c("Ball called", "Foul_ball", "Hit_by_pitch", "In_play","Strike_called","Strike_swinging")
+x <- pitch_call_a
+
+
+piepercent<- round(100*x/sum(x), 1)
 
 # Give the chart file a name.
-png(file = "player_a_pie_chart.jpg")
+png(file = "player_a_performance.jpg")
 
 # Plot the chart.
-pie3D(pitch_call_a,labels = lbl,explode = 0.1, main = "player_a_pie_chart ")
+pie(x, labels = piepercent, main = "Player_a_Performance",col = rainbow(length(x)))
+legend("topright", c("Ball called", "Foul_ball", "Hit_by_pitch", "In_play","Strike_called","Strike_swinging"), cex = 0.8,
+   fill = rainbow(length(x)))
 
 # Save the file.
 dev.off()
@@ -273,32 +270,28 @@ dev.off()
 ```
 
 
-
-###################################   Player B Performance at each Venue ################################
+### Player B Performance
 
 ```{r}
+# Create data for the labels and Pie Chart
 
-# Get the library.
-library(plotrix)
+lbl <- c("Ball called", "Foul_ball", "Hit_by_pitch", "In_play","Strike_called","Strike_swinging")
+x <- pitch_call_b
 
-# Create data for the graph.
 
-lbl <- c("ball_called", "foul_ball", "hit_by_pitch", "in_play","strike_called","strike_swinging")
+piepercent<- round(100*x/sum(x), 1)
 
 # Give the chart file a name.
-png(file = "player_b_pie_chart.jpg")
+png(file = "player_b_performance.jpg")
 
 # Plot the chart.
-pie3D(pitch_call_b,labels = lbl,explode = 0.1, main = "player_a_pie_chart ")
+pie(x, labels = piepercent, main = "Player_b_Performance",col = rainbow(length(x)))
+legend("topright", c("Ball called", "Foul_ball", "Hit_by_pitch", "In_play","Strike_called","Strike_swinging"), cex = 0.8,
+   fill = rainbow(length(x)))
 
 # Save the file.
 dev.off()
 
-
 ```
-
-
-
-
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
